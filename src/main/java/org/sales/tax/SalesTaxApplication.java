@@ -1,31 +1,66 @@
 package org.sales.tax;
 
+import java.util.Scanner;
+
 public class SalesTaxApplication {
-    public static void main(String[] args) {
 
-        ShoppingBasket basket1 = new ShoppingBasket();
-        basket1.addItem("book", 12.49);
-        basket1.addItem("music CD", 14.99);
-        basket1.addItem("chocolate bar", 0.85);
-        System.out.println("Output 1:");
-        basket1.printReceipt();
-        System.out.println();
+    public static void main(String[] args) throws InvalidItemFormatException {
+        Scanner scanner = new Scanner(System.in);
+        ShoppingBasket basket;
 
-        // Input 2
-        ShoppingBasket basket2 = new ShoppingBasket();
-        basket2.addItem("imported box of chocolates", 10.00);
-        basket2.addItem("imported bottle of perfume", 47.50);
-        System.out.println("Output 2:");
-        basket2.printReceipt();
-        System.out.println();
+        System.out.println("Enter all items, one per line (format: 'quantity name at price').");
+        System.out.println("Please enter twice once all items are added");
 
-        // Input 3
-        ShoppingBasket basket3 = new ShoppingBasket();
-        basket3.addItem("imported bottle of perfume", 27.99);
-        basket3.addItem("bottle of perfume", 18.99);
-        basket3.addItem("packet of headache pills", 9.75);
-        basket3.addItem("box of imported chocolates", 11.25);
-        System.out.println("Output 3:");
-        basket3.printReceipt();
+        String[] lines = collectInput(scanner);
+
+        basket = processInput(lines);
+
+        // Print the receipt
+        System.out.println("\nReceipt:");
+        basket.printReceipt();
+
+        scanner.close();
+    }
+
+    private static String[] collectInput(Scanner scanner) {
+        StringBuilder inputLines = new StringBuilder();
+        String line;
+        while (!(line = scanner.nextLine()).isEmpty()) {
+            inputLines.append(line).append("\n");
+        }
+        return inputLines.toString().split("\n");
+    }
+
+    private static ShoppingBasket processInput(String[] lines) throws InvalidItemFormatException {
+        ShoppingBasket basket = new ShoppingBasket();
+        for (String itemLine : lines) {
+            int firstSpaceIndex = itemLine.indexOf(" ");
+            int atIndex = itemLine.lastIndexOf(" at ");
+
+            if (firstSpaceIndex == -1 || atIndex == -1 || firstSpaceIndex >= atIndex) {
+                throw new InvalidItemFormatException("Invalid input format: " + itemLine);
+            }
+
+            // Extract quantity
+            int quantity;
+            try {
+                quantity = Integer.parseInt(itemLine.substring(0, firstSpaceIndex).trim());
+            } catch (NumberFormatException e) {
+                throw new InvalidItemFormatException("Invalid quantity: " + itemLine);
+            }
+
+            // Extract description and price
+            String description = itemLine.substring(firstSpaceIndex + 1, atIndex).trim();
+            double pricePerUnit;
+            try {
+                pricePerUnit = Double.parseDouble(itemLine.substring(atIndex + 4).trim());
+            } catch (NumberFormatException e) {
+                throw new InvalidItemFormatException("Invalid price: " + itemLine);
+            }
+
+            // Add item to basket with description, price, and quantity
+            basket.addItem(description, pricePerUnit, quantity);
+        }
+        return basket;
     }
 }

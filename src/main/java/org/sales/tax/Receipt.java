@@ -18,17 +18,29 @@ public class Receipt {
     }
 
     public void generateReceipt() {
+        calculateTotals();
+
         StringBuilder receiptDetails = new StringBuilder();
         for (Item item : items) {
-            double salesTax = TaxCalculator.calculateSalesTax(item);
-            double finalPrice = item.getPrice() + salesTax;
-            receiptDetails.append(String.format("%d %s: %.2f\n", 1, item.getName(), finalPrice));
-            totalSalesTax += salesTax;
-            totalCost += finalPrice;
+            receiptDetails.append(String.format("%d %s: %.2f\n", item.getQuantity(),
+                    item.getName(), item.getTotalCost()));
         }
-
         receiptDetails.append(String.format("Sales Taxes: %.2f\n", totalSalesTax));
         receiptDetails.append(String.format("Total: %.2f", totalCost));
-        System.out.println(receiptDetails);
+        printReceipt(receiptDetails.toString());
+    }
+
+    private void calculateTotals() {
+        totalSalesTax = 0;
+        totalCost = 0;
+
+        for (Item item : items) {
+            totalSalesTax += item.getSalesTax();
+            totalCost += (item.getPrice() * item.getQuantity()) + item.getSalesTax();
+        }
+    }
+
+    public void printReceipt(String receiptDetail) {
+        System.out.println(receiptDetail);
     }
 }
