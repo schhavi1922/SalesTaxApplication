@@ -1,46 +1,28 @@
 package org.sales.tax;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Receipt {
 
     private final List<Item> items;
-    private double totalSalesTax = 0;
-    private double totalCost = 0;
+    private final double totalSalesTax;
+    private final double totalCost;
 
-    public Receipt() {
-        this.items = new ArrayList<>();
+    public Receipt(List<Item> items, double totalSalesTax, double totalCost) {
+        this.items = items;
+        this.totalSalesTax = totalSalesTax;
+        this.totalCost = totalCost;
     }
 
-    public void addItem(Item item) {
-        items.add(item);
-    }
-
-    public void generateReceipt() {
-        calculateTotals();
-
-        StringBuilder receiptDetails = new StringBuilder();
+    public void print() {
+        System.out.println("Sales Receipt");
+        System.out.println("------------");
         for (Item item : items) {
-            receiptDetails.append(String.format("%d %s: %.2f\n", item.getQuantity(),
-                    item.getName(), item.getTotalCost()));
+            System.out.print(item.getQuantity() + " " + item.getName());
+            System.out.printf(": %.2f%n", item.getTotalCost());
         }
-        receiptDetails.append(String.format("Sales Taxes: %.2f\n", totalSalesTax));
-        receiptDetails.append(String.format("Total: %.2f", totalCost));
-        printReceipt(receiptDetails.toString());
-    }
-
-    private void calculateTotals() {
-        totalSalesTax = 0;
-        totalCost = 0;
-
-        for (Item item : items) {
-            totalSalesTax += item.getSalesTax();
-            totalCost += (item.getPrice() * item.getQuantity()) + item.getSalesTax();
-        }
-    }
-
-    public void printReceipt(String receiptDetail) {
-        System.out.println(receiptDetail);
+        System.out.printf("Sales Tax: %.2f%n", totalSalesTax);
+        System.out.printf("Total Cost: %.2f%n", totalCost);
+        System.out.println("------------");
     }
 }

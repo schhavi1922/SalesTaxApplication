@@ -11,7 +11,7 @@ public class Constants {
     static final double TAX_ROUNDING_FACTOR = 0.05;
 
     static final Set<String> taxExemptItems = Set.of("book", "novel", "textbook", "comic", "biography", "dictionary",
-            "magazine", "anthology", "encyclopedia", "journal", "thriller", "chocolate", "biscuit", "apple", "banana",
+            "magazine", "anthology", "encyclopedia", "journal", "thriller", "chocolate", "chocolates", "biscuit", "apple", "banana",
             "bread", "rice", "cheese", "pasta", "yogurt", "salad", "pill", "aspirin", "syringe", "stethoscope",
             "antibiotic", "bandage", "vaccine", "thermometer", "x-ray", "insulin", "crutches"
     );

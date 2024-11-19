@@ -1,32 +1,23 @@
 package org.sales.tax;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShoppingBasket {
 
-    private final Receipt receipt = new Receipt();
+    private final List<Item> items = new ArrayList<>();
 
-    // Method to add items to the basket
-    public void addItem(String description, double price, int quantity) {
-        boolean isImported = description.contains("imported");
-        boolean isTaxExempt = isExempt(description);
-        Item item = new Item(description, price, isImported, isTaxExempt, quantity);
-        receipt.addItem(item);
+    public void addItem(Item item) {
+        items.add(item);
     }
 
-    public void add(Item item) {
-        receipt.addItem(item);
-    }
-
-    // Method to check if the item is exempt from basic sales tax
-    private boolean isExempt(String description) {
-        for (String exempt : Constants.taxExemptItems) {
-            if (description.contains(exempt)) {
-                return true;
-            }
+    public Receipt generateReceipt() {
+        double sumSalesTax = 0.0;
+        double sumCost = 0.0;
+        for (Item item : items) {
+            sumSalesTax += item.getSalesTax();
+            sumCost += item.getTotalCost();
         }
-        return false;
-    }
-
-    public void printReceipt() {
-        receipt.generateReceipt();
+        return new Receipt(items, sumSalesTax, sumCost);
     }
 }
