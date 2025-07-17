@@ -5,8 +5,6 @@ public class ItemParser {
     public static Item parseItem(String itemLine) throws InvalidItemFormatException {
         int firstSpaceIndex = itemLine.indexOf(" ");
         int atIndex = itemLine.lastIndexOf(" at ");
-        boolean isTaxExempted = false;
-        boolean isImported = false;
 
         if (firstSpaceIndex == -1 || atIndex == -1 || firstSpaceIndex >= atIndex) {
             throw new InvalidItemFormatException("Invalid input format: " + itemLine);

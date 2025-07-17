@@ -1,10 +1,11 @@
 package org.sales.tax;
 
+import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class ShoppingBasket {
-
     private final List<Item> items = new ArrayList<>();
 
     public void addItem(Item item) {
